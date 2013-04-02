@@ -1,0 +1,24 @@
+% Environment for requirements lists (which is what this spec style is supposedly for).
+% First argument of \req is priority (1-3, as indicated in the legend), second argument is the requirement
+% description.
+%
+% Use like this:
+%
+% \begin{requirements}
+%   \req{1}{My first requirement}
+%   \req{1}{My second requirement}
+% \end{requirements}
+\newenvironment{requirements}{%
+  \newcounter{reqctr}
+  \setcounter{reqctr}{1}
+  \tabularx{\linewidth}{|l|X|l|}
+  \hline
+  {\bf Req. Num.} & {\bf Description} & {\bf Priority} \\\hline
+}{%
+  \endtabularx
+  \vspace{0.5em}
+  \par\noindent
+  P001 = Required for launch, P002 = Required, provided in subsequent release, P003 = Not required, nice to have.
+}
+
+\newcommand{\req}[2]{R\hspace{-2pt}\padzeroes[3]\decimal{reqctr}\stepcounter{reqctr} & #2 & P\hspace{-2pt}\padzeroes[3]\decimalnum{#1} \\\hline}

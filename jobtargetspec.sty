@@ -1,0 +1,126 @@
+% Use some special packages.
+\usepackage[margin=2.5cm]{geometry}   % Decrease margins with geometry
+\usepackage{graphicx}                 % Be able to use graphics (JT logo)
+\usepackage{helvet}                   % Use Helvetica for everything
+\usepackage{tabularx}                 % Tables with better scaling features
+\usepackage{color}                    % Display things in color
+\usepackage{soul}                     % Text highlighting!
+\usepackage{framed}                   % Editor's note boxes use framed
+\usepackage{calc}                     % Align things using math
+\usepackage[bottom]{footmisc}         % Push footnotes to bottom of pages always
+\usepackage[compact]{titlesec}        % Squish space around headings
+\usepackage{fmtcount}                 % Pad numbers with zeros in req. lists
+\usepackage{hyperref}                 % Linking and other PDF-specific options
+
+% Settings for hyperref (link styles, etc.)
+% Specifically, use my own shade of blue for link colors, and when links
+% are clicked, display an outline rather than inverting the text color.
+%
+% These options are only valid in PDF output! DVI output may have link colors
+% displayed, but links obviously don't work in DVI.
+\definecolor{mylinkcolor}{rgb}{0.25,0.37,0.6}
+\hypersetup{
+  pdfstartview=Fit,
+  colorlinks=true,
+  linkcolor=mylinkcolor,
+  anchorcolor=mylinkcolor,
+  citecolor=mylinkcolor,
+  filecolor=mylinkcolor,
+  menucolor=mylinkcolor,
+  urlcolor=mylinkcolor,
+  pdfhighlight=/O
+}
+
+% Override built-in commands to my tastes.
+\renewcommand{\familydefault}{\sfdefault}   % Use sans-serif as the default font family
+\renewcommand{\arraystretch}{1.5}           % Pad table cells (top and bottom) because it looks better
+\renewcommand{\tabcolsep}{0.2cm}            % Pad table cells (left and right)   ''    ''  ''    ''
+
+% Display section numbering in the left margin and flush-left align all section
+% titles themselves at 36 points.
+\makeatletter
+\def\@seccntformat#1{\rlap{\hskip-36pt\csname the#1\endcsname}}
+\makeatother
+
+% Environment for requirements lists (which is what this spec style is supposedly for).
+% First argument of \req is priority (1-3, as indicated in the legend), second argument is the requirement
+% description.
+%
+% Use like this:
+%
+% \begin{requirements}
+%   \req{1}{My first requirement}
+%   \req{1}{My second requirement}
+% \end{requirements}
+\newenvironment{requirements}{%
+  \newcounter{reqctr}
+  \setcounter{reqctr}{1}
+  \tabularx{\linewidth}{|l|X|l|}
+  \hline
+  {\bf Req. Num.} & {\bf Description} & {\bf Priority} \\\hline
+}{%
+  \endtabularx
+  \vspace{0.5em}
+  \par\noindent
+  P001 = Required for launch, P002 = Required, provided in subsequent release, P003 = Not required, nice to have.
+}
+
+% Environment for change logs.
+% Contains \clentry rows. The arguments to \clentry are:
+%   - Date
+%   - Initials
+%   - Description
+%
+% It should look like this:
+%
+% \begin{changelog}
+%   \clentry{1 Jan 2010}{AB}{Initial version.}
+%   \clentry{2 Jan 2010}{AB}{Additional detail in section 2.}
+%   \clmajorversion
+%   \clentry{5 Jan 2010}{RC}{Significant additions to implementation details.}
+% \end{changelog}
+%
+% Use the \clmajorversion command to increment the major version. The versions displayed for
+% the above example would be 1.0, 1.1, 2.0.
+\newenvironment{changelog}{%
+  \newcounter{clctri}
+  \newcounter{clctrii}[clctri]
+  \setcounter{clctri}{1}
+  \setcounter{clctrii}{0}
+  \tabularx{\linewidth}{|l|l|l|X|}
+  \hline
+  {\bf Ver.} & {\bf Date} & {\bf Initial} & {\bf Description} \\\hline
+}{%
+  \endtabularx
+  \vspace{0.5em}
+}
+
+% Environment for an editor's note (or pullquote, or something requiring emphasis; generally one
+% paragraph or less).
+%
+% Usage:
+%
+% \begin{ednote}
+% Do you know where your towel is?
+% \end{ednote}
+\newenvironment{ednote}{%
+  \def\FrameCommand{\setlength{\fboxrule}{2pt}\setlength{\fboxsep}{0.5em}\fcolorbox[rgb]{0.65,0.87,0.49}{1,1,1}}%
+  \MakeFramed{\setlength{\hsize}{\textwidth-2\fboxsep-2\fboxrule} \FrameRestore}
+  \noindent
+}{%
+  \endMakeFramed
+}
+
+% Use \logotitle to create a title block containing the JobTarget logo.
+\newcommand{\logotitle}[1]{\title{\includegraphics[width=200pt]{../jobtarget}\\#1}}
+
+% Commands used by the two provided list environments.
+\newcommand{\req}[2]{R\hspace{-2pt}\padzeroes[3]\decimal{reqctr}\stepcounter{reqctr} & #2 & P\hspace{-2pt}\padzeroes[3]\decimalnum{#1} \\\hline}
+\newcommand{\clentry}[3]{\decimal{clctri}.\hspace{-2.5pt}\decimal{clctrii}\stepcounter{clctrii} & #1 & #2 & #3 \\\hline}
+\newcommand{\clmajorversion}{\stepcounter{clctri}}
+
+% Don't indent paragraphs; that's for real books.
+\setlength{\parindent}{0pt}
+
+% Set the space between paragraphs to one half of the baseline skip (generally line height, but rubber).
+\setlength{\parskip}{0.5\baselineskip}

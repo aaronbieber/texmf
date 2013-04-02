@@ -1,0 +1,32 @@
+% Environment for change logs.
+% Contains \clentry rows. The arguments to \clentry are:
+%   - Date
+%   - Initials
+%   - Description
+%
+% It should look like this:
+%
+% \begin{changelog}
+%   \clentry{1 Jan 2010}{AB}{Initial version.}
+%   \clentry{2 Jan 2010}{AB}{Additional detail in section 2.}
+%   \clmajorversion
+%   \clentry{5 Jan 2010}{RC}{Significant additions to implementation details.}
+% \end{changelog}
+%
+% Use the \clmajorversion command to increment the major version. The versions displayed for
+% the above example would be 1.0, 1.1, 2.0.
+\newenvironment{changelog}{%
+  \newcounter{clctri}
+  \newcounter{clctrii}[clctri]
+  \setcounter{clctri}{1}
+  \setcounter{clctrii}{0}
+  \tabularx{\linewidth}{|l|l|l|X|}
+  \hline
+  {\bf Ver.} & {\bf Date} & {\bf Initial} & {\bf Description} \\\hline
+}{%
+  \endtabularx
+  \vspace{0.5em}
+}
+
+\newcommand{\clentry}[3]{\decimal{clctri}.\hspace{-2.5pt}\decimal{clctrii}\stepcounter{clctrii} & #1 & #2 & #3 \\\hline}
+\newcommand{\clmajorversion}{\stepcounter{clctri}}
